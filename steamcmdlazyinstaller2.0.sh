@@ -19,7 +19,7 @@ then
      echo input the installation path of the game
      read -r d
      mkdir $d
-     ./steamcmd.sh +login $a $b +force_install_dir $d +app_update $c validate 
+     ./steamcmd.sh +login $a +force_install_dir $d +app_update $c validate 
 else
        echo input the password of the username you entered
        read -r b
