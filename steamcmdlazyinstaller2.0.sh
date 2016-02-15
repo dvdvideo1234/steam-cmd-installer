@@ -1,6 +1,6 @@
 #!/bin/sh
 echo thx for using this script,its my first script so make any suggestion to the github page
-echo this will instal the required dependencies
+echo this will install the required dependencies
 sudo apt-get install lib32gcc1
 echo making directory /steamcmd at /home/$USER/ ....
 mkdir ~/steamcmd
