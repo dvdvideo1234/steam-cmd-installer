@@ -6,14 +6,15 @@ sudo apt-get install lib32gcc1
 if [[ "getconf LONG_BIT" == '64' ]]; then
     echo it seems that you run a 64 bit version of linux, we are going to install 32 bit requirement
     dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
+fi
 echo do you wish to install steam at a separate user?y or n
 read -r l
 if test "$l" = "y" ; then
    USER="steam"
    echo making directory /steamcmd at /home/$USER/ ....
    #the user creator there is a modified version of the one Makeklat00 go check him out
-   id -u $user &>/dev/null || useradd -r -m $user
-   su $user -c "mkdir "~/steamcmd"
+   id -u $user &>/dev/null || sudo useradd -r -m $user
+   su $user -c mkdir ~/steamcmd
    echo switching to the created folder
    cd ~/steamcmd
    echo Downloading steamcmd
