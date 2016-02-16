@@ -1,4 +1,5 @@
 #!/bin/sh
+#this script is unfinished and needs testing
 echo thx for using this script,its my first script so make any suggestion to the github page
 echo this will install the required dependencies
 sudo apt-get install lib32gcc1
