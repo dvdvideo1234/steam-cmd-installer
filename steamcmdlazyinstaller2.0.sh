@@ -10,7 +10,7 @@ echo Downloading steamcmd
 wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 echo Extracting
 tar -xvzf steamcmd_linux.tar.gz
-echo input your username for steam(you can log as anonymous)
+echo input your username for steam,you can log as anonymous
 read -r a
 if test "$a" = "anonymous"
 then
