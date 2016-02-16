@@ -7,6 +7,6 @@ this is my first script so be gentle,this script will download and install steam
 Install a game from the script after it installed steamcmd,
 No need to touch a file manager, the script will handle everything from downloading to install steamcmd and optionally a game,
 anonymous logging support,
-the script can make automatically a user account for steam without password(almost done!),
+the script can make automatically a user account in linux for steam without password(almost done!),
 #planned feature
 make it so the script dont install anything until the user inputted all the needed variable(0%complete,not sure i will implement it)
