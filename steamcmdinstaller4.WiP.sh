@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo thx for using this script,its my first script so make any suggestion to the github page
 echo this will install the required dependencies
 sudo apt-get install lib32gcc1
@@ -10,7 +10,7 @@ fi
 echo do you wish to install steam at a separate user?y or n
 read -r l
 if test "$l" = "y" ; then
-   USER="steam"
+   user="steam"
    echo making directory /steamcmd at /home/$USER/ ....
    #the user creator there is a modified version of the one Makeklat00 go check him out
    id -u $user &>/dev/null || sudo useradd -r -m $user
