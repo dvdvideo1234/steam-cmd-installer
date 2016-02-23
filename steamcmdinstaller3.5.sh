@@ -33,7 +33,7 @@ then
      read -r c
      echo input the installation path of the game in the folder /home/$USER
      read -r d
-     mkdir $d
+     mkdir ~$d
      ./steamcmd.sh +login $a +force_install_dir /home/$USER/$d +app_update $c validate
 else
        echo input the password of the username you entered
@@ -42,7 +42,7 @@ else
        read -r c
        echo input the installation path of the game in the folder /home/$USER
        read -r d
-       mkdir $d
+       mkdir ~$d
        ./steamcmd.sh +login $a $b +force_install_dir /home/$USER/$d +app_update $c validate
 
 fi
