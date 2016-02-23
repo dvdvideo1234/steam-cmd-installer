@@ -31,18 +31,18 @@ if test "$a" = "anonymous"
 then
      echo input the appid of the game you wish to install
      read -r c
-     echo input the installation path of the game in the folder /home/$USER
+     echo input the name of the folder of the game in the directorie /home/$USER/
      read -r d
-     mkdir ~$d
+     mkdir /home/$USER/$d
      ./steamcmd.sh +login $a +force_install_dir /home/$USER/$d +app_update $c validate
 else
        echo input the password of the username you entered
        read -r b
        echo input the appid of the game you wish to install
        read -r c
-       echo input the installation path of the game in the folder /home/$USER
+       echo input the name of the folder of the game in the directorie /home/$USER/
        read -r d
-       mkdir ~$d
+       mkdir /home/$USER/$d
        ./steamcmd.sh +login $a $b +force_install_dir /home/$USER/$d +app_update $c validate
 
 fi
