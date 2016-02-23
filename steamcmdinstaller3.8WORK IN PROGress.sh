@@ -1,3 +1,4 @@
+#This modified version was made by dvdvideo1234 shoutout to him
 echo ------- Do you wish to install the dependencies ? [y or n] -------
 read -r h
 if test "$h" = "y"
