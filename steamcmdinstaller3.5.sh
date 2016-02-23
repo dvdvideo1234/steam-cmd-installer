@@ -1,50 +1,68 @@
 #!/bin/sh
-echo thx for using this script,its my first script so make any suggestion to the github page
-echo this will install the required dependencies
-sudo apt-get install lib32gcc1
-# the code that verifies your achitecture is not mine, this has been made by Makeklat00, go check out his version of the installer here:https://github.com/MakeKlat00/steamcmd-multi-srv/blob/master/steamcmd-install.sh,other than that the rest is my work
-if [[ "getconf LONG_BIT" == '64' ]]; then
-    echo it seems that you run a 64 bit version of linux, we are going to install 32 bit requirement
-    dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
+
+echo ------- Do you wish to install the dependencies ? [y or n] -------
+read -r h
+if test "$h" = "y"
+then
+  echo ------- This will install the required dependencies -------
+  sudo apt-get install lib32gcc1
 fi
-echo making directory /steamcmd at /home/$USER/ ....
-mkdir ~/steamcmd
-echo switching to the folder
-cd ~/steamcmd
-echo downloading steam
+
+# the code that verifies your architecture is not mine, this has been made by Makeklat00, go check out his version of the installer here:https://github.com/MakeKlat00/steamcmd-multi-srv/blob/master/steamcmd-install.sh,other than that the rest is my work
+if [[ "getconf LONG_BIT" == '64' ]]; then
+  echo ------- It seems that you are running a 64 bit version of linux, we are going to install 32 bit requirement -------
+  dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
+fi
+
+insdir="$1"
+if [ -n "$insdir" ]; then
+  echo ------- Making directory /steamcmd at $insdir -------
+else
+  echo ------- Making directory /steamcmd at /home/$USER -------
+  insdir="/home/$USER"
+fi
+
+# Making a directory and switching into it
+mkdir $insdir/steamcmd
+cd $insdir/steamcmd
+
+echo ------- Downloading steam -------
 wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 tar -xvzf steamcmd_linux.tar.gz
-echo do you wish to install a game now?y or n
+
+# Make it executable
+chmod +x steamcmd.sh
+
+echo ------- Do you wish to install a game now ? [y or n] -------
 read -r h
    
 if test "$h" = "y"
 then
-     echo input your username for steam,you can log as anonymous
-     read -r a
+  echo ------- Input your username for steam, or login as anonymous -------
+  read -r a
 else
-     echo thx for using my installer! we just gonna run steam for a update check
-     ./steamcmd.sh +quit
-     exit
+  echo ------- Running steam update check -------
+  ./steamcmd.sh +quit
+  exit
 fi
 
 if test "$a" = "anonymous"
 then
-     echo input the appid of the game you wish to install
-     read -r c
-     echo input the installation path of the game in the folder /home/$USER
-     read -r d
-     mkdir $d
-     ./steamcmd.sh +login $a +force_install_dir /home/$USER/$d +app_update $c validate
+  echo ------- Game appid you wish to install -------
+  read -r c
+  echo ------- Game path in the folder $insdir -------
+  read -r d
+  mkdir $insdir/$d
+  ./steamcmd.sh +login $a +force_install_dir $insdir/$d +app_update $c validate
 else
-       echo input the password of the username you entered
-       read -r b
-       echo input the appid of the game you wish to install
-       read -r c
-       echo input the installation path of the game in the folder /home/$USER
-       read -r d
-       mkdir $d
-       ./steamcmd.sh +login $a $b +force_install_dir /home/$USER/$d +app_update $c validate
-
+  echo ------- Password of the username you entered -------
+  read -r b
+  echo ------- Game appid you wish to install -------
+  read -r c
+  echo ------- Game path in the folder $insdir -------
+  read -r d
+  mkdir $insdir/$d
+  ./steamcmd.sh +login $a $b +force_install_dir $insdir/$d +app_update $c validate
 fi
 
 exit
