@@ -25,7 +25,7 @@ fi
 # Making a directory and switching into it
 mkdir $insdir/steamcmd
 cd $insdir/steamcmd
-
+#TODO:implement an md5 sum checker
 echo ------- Downloading steam -------
 wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 tar -xvzf steamcmd_linux.tar.gz
