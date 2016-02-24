@@ -1,3 +1,4 @@
+#!/bin/bash
 echo ------- Do you wish to install the dependencies ? [y or n] -------
 read -r h
 if test "$h" = "y"
