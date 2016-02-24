@@ -1,19 +1,42 @@
-#!/bin/bash
-echo ------- Do you wish to install the dependencies ? [y or n] -------
-read -r h
-if test "$h" = "y"
-then
-  echo ------- This will install the required dependencies -------
-  sudo apt-get install lib32gcc1
-fi
-
-# the code that verifies your architecture is not mine, this has been made by Makeklat00, go check out his version of the installer here:https://github.com/MakeKlat00/steamcmd-multi-srv/blob/master/steamcmd-install.sh,other than that the rest is my work
-if [[ "getconf LONG_BIT" == '64' ]]; then
-  echo ------- It seems that you are running a 64 bit version of linux, we are going to install 32 bit requirement -------
-  dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
-fi
+#!/bin/sh
 
 insdir="$1"
+user=""
+pass=""
+dir=""
+appid=""
+appmod=""
+bool=""
+chkhash=""
+
+function getInput()
+{
+  local rez=""
+  echo ------- $1 -------
+  read -r rez
+  while [ -z "$rez" ]; do
+    echo ------ Please put $2 ------
+    read -r rez
+  done
+  eval "$3=$rez"
+}
+
+echo ---------------- This script installs SteamCMD dedicated servers ----------------
+
+echo ------- Do you want to install dependencies ? [y or n] -------
+read -r bool
+if test "$bool" = "y"
+then
+  sudo apt-get install lib32gcc1
+  sudo apt-get install lib32stdc++6
+  
+  # the code that verifies your architecture is not mine, this has been made by Makeklat00, go check out his version of the installer here:https://github.com/MakeKlat00/steamcmd-multi-srv/blob/master/steamcmd-install.sh,other than that the rest is my work
+  if [[ "getconf LONG_BIT" == '64' ]]; then
+    echo ------- It seems that you are running a 64 bit version of linux, we are going to install 32 bit requirement -------
+    dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
+  fi
+fi
+
 if [ -n "$insdir" ]; then
   echo ------- Making directory /steamcmd at $insdir -------
 else
@@ -24,67 +47,66 @@ fi
 # Making a directory and switching into it
 mkdir $insdir/steamcmd
 cd $insdir/steamcmd
-#TODO:implement an md5 sum checker
+
 echo ------- Downloading steam -------
 wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+
+chkhash=$(md5sum steamcmd_linux.tar.gz | cut -d' ' -f1)
+if test "$chkhash" == "09e3f75c1ab5a501945c8c8b10c7f50e" 
+then
+  echo ----- Checksum OK -------
+else
+  echo ----- Checksum FAIL ------- $chkhash
+  exit
+fi
+
 tar -xvzf steamcmd_linux.tar.gz
 
 # Make it executable
 chmod +x steamcmd.sh
 
 echo ------- Do you wish to install a game now ? [y or n] -------
-read -r h
+read -r bool
    
-if test "$h" = "y"
+if test "$bool" == "y"
 then
-  echo ------- Input your username for steam, or login as anonymous -------
-  read -r a
-  if [ -z "$a" ]; then
-     echo ------ please put a username ------
-     read -r a
+  getInput "Enter a user for steam, or login as anonymous" "user name" user
 else
   echo ------- Running steam update check -------
   ./steamcmd.sh +quit
   exit
 fi
 
-if test "$a" = "anonymous"
+if test "$user" == "anonymous"
 then
-  echo ------- Game appid you wish to install -------
-  read -r c
-  if [ -z "$c" ]; then
-     echo ----- please put an appid -------
-     read -r c
+  getInput "Which appid you wish to install ?" "appid" appid
+  if test "$appid" == "90"
+  then # https://developer.valvesoftware.com/wiki/Dedicated_Servers_List
+    getInput "Do you need to install a mod for HL1 / CS1.6 ? [no or <mod_name>]" "a mod" appmod
   fi
-  echo ------- Game path in the folder $insdir -------
-  read -r d
-  if [ -z "$d" ]; then
-     echo ------ please put the path -------
-     read -r d
+  getInput "Where in [$insdir] do you want to put it ?" "path" dir
+  mkdir $insdir/$dir
+  if test "$appmod" == "no"
+  then
+    ./steamcmd.sh +login $user +force_install_dir $insdir/$dir +app_update $appid validate +quit
+  else
+    ./steamcmd.sh +login $user +force_install_dir $insdir/$dir +app_update $appid validate +app_set_config "90 mod $appmod" +quit
   fi
-  mkdir $insdir/$d
-  ./steamcmd.sh +login $a +force_install_dir $insdir/$d +app_update $c validate +quit
 else
-  echo ------- Password of the username you entered -------
-  read -r b
-  if [ -z "$b" ]; then
-     echo ------ please put a password ------
-     read -r b
+  getInput "What is the password for the user [$user] ?" "password" pass
+  getInput "Which appid you wish to install ?" "appid" appid
+  if test "$appid" == "90"
+  then # https://developer.valvesoftware.com/wiki/Dedicated_Servers_List
+    getInput "Do you need to install a mod for HL1 / CS1.6 ? [no or <mod_name>]" "a mod" appmod
   fi
-  echo ------- Game appid you wish to install -------
-  read -r c
-  if [ -z "$c" ]; then
-     echo ------ please put an appid ------
-     read -r c
+  getInput "Where in [$insdir] do you want to put it ?" "path" dir
+  mkdir $insdir/$dir
+  if test "$appmod" == "no"
+  then
+    ./steamcmd.sh +login $user $pass +force_install_dir $insdir/$dir +app_update $appid validate +quit
+  else
+    ./steamcmd.sh +login $user $pass +force_install_dir $insdir/$dir +app_update $appid validate +app_set_config "90 mod $appmod" +quit
   fi
-  echo ------- Game path in the folder $insdir -------
-  read -r d
-  if [ -z "$d" ]; then
-     echo ------ please put the path -------
-     read -r d
-  fi
-  mkdir $insdir/$d
-  ./steamcmd.sh +login $a $b +force_install_dir $insdir/$d +app_update $c validate +quit
 fi
 
 exit
