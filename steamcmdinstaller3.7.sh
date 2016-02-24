@@ -109,4 +109,4 @@ else
   fi
 fi
 
-exit
+exit0
