@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 insdir="$1"
 user=""
@@ -8,6 +8,7 @@ appid=""
 appmod=""
 bool=""
 chkhash=""
+archit=""
 
 function getInput()
 {
@@ -21,19 +22,21 @@ function getInput()
   eval "$3=$rez"
 }
 
-echo ---------------- This script installs SteamCMD dedicated servers ----------------
+echo ------------ This script installs SteamCMD dedicated servers ------------
 
 echo ------- Do you want to install dependencies ? [y or n] -------
 read -r bool
 if test "$bool" = "y"
 then
-  sudo apt-get install lib32gcc1
-  sudo apt-get install lib32stdc++6
-  
-  # the code that verifies your architecture is not mine, this has been made by Makeklat00, go check out his version of the installer here:https://github.com/MakeKlat00/steamcmd-multi-srv/blob/master/steamcmd-install.sh,other than that the rest is my work
-  if [[ "getconf LONG_BIT" == '64' ]]; then
-    echo ------- It seems that you are running a 64 bit version of linux, we are going to install 32 bit requirement -------
-    dpkg --add-architecture i386 && apt-get update && apt-get install -y ia32-libs ia32-libs-gtk
+  archit=$(uname -m)
+  echo ------- You are using $archit linux kernel -------
+  if [[ "$archit" == "x86_64" ]]; then
+    sudo dpkg --add-architecture i386
+    sudo apt-get update
+    sudo apt-get install lib32gcc1
+    sudo apt-get install lib32stdc++6
+  else
+    sudo apt-get install lib32gcc1
   fi
 fi
 
@@ -57,7 +60,7 @@ then
   echo ----- Checksum OK -------
 else
   echo ----- Checksum FAIL ------- $chkhash
-  exit
+  exit 0
 fi
 
 tar -xvzf steamcmd_linux.tar.gz
@@ -74,7 +77,7 @@ then
 else
   echo ------- Running steam update check -------
   ./steamcmd.sh +quit
-  exit
+  exit 0
 fi
 
 if test "$user" == "anonymous"
