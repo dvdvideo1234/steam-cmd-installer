@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 insdir="$1"
 user=""
