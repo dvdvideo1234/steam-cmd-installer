@@ -34,7 +34,7 @@ then
      echo input the name of the folder of the game in the directorie /home/$USER/
      read -r d
      mkdir /home/$USER/$d
-     ./steamcmd.sh +login $a +force_install_dir /home/$USER/$d +app_update $c validate
+     ./steamcmd.sh +login $a +force_install_dir /home/$USER/$d +app_update $c validate +quit
 else
        echo input the password of the username you entered
        read -r b
